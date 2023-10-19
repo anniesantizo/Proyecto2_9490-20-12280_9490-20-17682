@@ -8,6 +8,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [NIT, setNIT] = useState('');
+    const [DPI, setDPI] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [bornDate, setBornDate] = useState('');
@@ -41,6 +42,7 @@ export default function Login() {
                 password,
                 passwordConfirmation,
                 NIT,
+                DPI,
                 name,
                 lastName,
                 bornDate,
@@ -62,6 +64,7 @@ export default function Login() {
                 setPassword('');
                 setPasswordConfirmation('');
                 setNIT('');
+                setDPI ('');
                 setName('');
                 setLastName('');
                 setBornDate('');
@@ -212,13 +215,115 @@ export default function Login() {
                                 <input
                                     type="NIT"
                                     id="NIT"
-                                    placeholder="NIT"
+                                    placeholder="Sin guiones ni espacios"
                                     value={NIT}
                                     onChange={(e) => setNIT(e.target.value)}
                                     className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
                                 />
                             </td>
                         </tr>
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="DPI" className="text-gray-600">
+                                DPI
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="DPI"
+                                    id="DPI"
+                                    placeholder="Sin guiones ni espacios"
+                                    value={DPI}
+                                    onChange={(e) => setDPI(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="name" className="text-gray-600">
+                                Nombres
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="name"
+                                    id="name"
+                                    placeholder=""
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="lastName" className="text-gray-600">
+                                Apellidos
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="lastName"
+                                    id="lastName"
+                                    placeholder=""
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="bornDate" className="text-gray-600">
+                                Fecha de Nacimiento
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="bornDate"
+                                    id="bornDate"
+                                    placeholder="DD/MM/AA"
+                                    value={bornDate}
+                                    onChange={(e) => setBornDate(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="deliveryAddress" className="text-gray-600">
+                                Dirección de entrega
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="deliveryAddress"
+                                    id="deliveryAddress"
+                                    placeholder=""
+                                    value={deliveryAddress}
+                                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td className="py-3 px-6 text-left">
+                                <label htmlFor="phoneNumber" className="text-gray-600">
+                                Número de teléfono
+                                </label>
+                            </td>
+                            <td className="py-3 px-6 text-right">
+                                <input
+                                    type="phoneNumber"
+                                    id="phoneNumber"
+                                    placeholder=""
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                />
+                            </td>
+                        </tr>  
                         <tr>
                             <td colSpan="2" className="py-3 px-6 text-center">
                                 {isSigningUp ? (
