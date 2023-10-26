@@ -1,7 +1,8 @@
 'use client'
-import { useState, useEffect } from 'react';
-import TaskList from "@/app/components/TaskList";
-import { FaSignOutAlt } from 'react-icons/fa';
+import {useState, useEffect} from 'react';
+import {FaSignOutAlt} from 'react-icons/fa';
+import Catalog from "@/app/components/Catalog";
+import Dashboard from "@/app/components/dashboard";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -36,6 +37,21 @@ export default function Login() {
             return;
         }
 
+        if (password.length < 8) {
+            window.alert('La contraseña debe tener al menos 8 caracteres.');
+            return;
+        }
+
+        if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}/.test(password)) {
+            window.alert('La contraseña debe incluir al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.');
+            return;
+        }
+
+        if (password !== passwordConfirmation) {
+            window.alert('Las contraseñas no coinciden.');
+            return;
+        }
+
         try {
             const userData = {
                 email,
@@ -50,7 +66,7 @@ export default function Login() {
                 phoneNumber
             };
 
-            const response = await fetch('http://localhost:8080/api/registro/295326', {
+            const response = await fetch(`http://localhost:8080/api/registro/${DPI}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +80,7 @@ export default function Login() {
                 setPassword('');
                 setPasswordConfirmation('');
                 setNIT('');
-                setDPI ('');
+                setDPI('');
                 setName('');
                 setLastName('');
                 setBornDate('');
@@ -90,7 +106,7 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/tasks/signin', {
+            const response = await fetch('http://localhost:8080/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +122,8 @@ export default function Login() {
                 const token = data.token;
                 localStorage.setItem('token', token);
                 setIsLoggedIn(true);
-            } if (response.status === 400) {
+            }
+            if (response.status === 400) {
                 const responseData = await response.json();
                 const errorMessage = responseData.msg; // Nombre del campo que contiene el mensaje
                 window.alert(`${errorMessage}`);
@@ -125,15 +142,7 @@ export default function Login() {
         <div>
             {isLoggedIn ? (
                 <div className="relative">
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-end text-white bg-red-500 hover:bg-red-600 rounded-md absolute right-0 top-0 mr-4 mt-4 px-2 py-1"
-                    >
-                        <FaSignOutAlt className="mr-1" />
-                        Cerrar Sesión
-                    </button>
-
-                    <TaskList />
+                    <Dashboard isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
                 </div>
             ) : (
                 <div className="flex justify-center items-center h-screen">
@@ -188,142 +197,163 @@ export default function Login() {
                                 />
                             </td>
                         </tr>
-                        <tr>
+                        {isSigningUp && (
+                            <tr>
+                                <td className="py-3 px-6 text-left">
+                                    <label htmlFor="passwordConfirmation" className="text-gray-600">
+                                        Confirmar contraseña
+                                    </label>
+                                </td>
+                                <td className="py-3 px-6 text-right">
+                                    <input
+                                        type="password"
+                                        id="passwordConfirmation"
+                                        placeholder="Confirmar Contraseña"
+                                        value={passwordConfirmation}
+                                        onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                        className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                    />
+                                </td>
+                            </tr>
+                        )}
+                        {isSigningUp && (
+                            <tr>
+                                <td className="py-3 px-6 text-left">
+                                    <label htmlFor="NIT" className="text-gray-600">
+                                        NIT
+                                    </label>
+                                </td>
+                                <td className="py-3 px-6 text-right">
+                                    <input
+                                        type="NIT"
+                                        id="NIT"
+                                        placeholder="Sin guiones ni espacios"
+                                        value={NIT}
+                                        onChange={(e) => setNIT(e.target.value)}
+                                        className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                    />
+                                </td>
+                            </tr>
+                        )}
+                        {isSigningUp && (
+                            <tr>
+                                <td className="py-3 px-6 text-left">
+                                    <label htmlFor="DPI" className="text-gray-600">
+                                        DPI
+                                    </label>
+                                </td>
+                                <td className="py-3 px-6 text-right">
+                                    <input
+                                        type="DPI"
+                                        id="DPI"
+                                        placeholder="Sin guiones ni espacios"
+                                        value={DPI}
+                                        onChange={(e) => setDPI(e.target.value)}
+                                        className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                                    />
+                                </td>
+                            </tr>
+                            )}
+                        {isSigningUp && (
+
+                            <tr>
                             <td className="py-3 px-6 text-left">
-                                <label htmlFor="passwordConfirmation" className="text-gray-600">
-                                    Confirmar contraseña
-                                </label>
+                            <label htmlFor="name" className="text-gray-600">
+                            Nombres
+                            </label>
                             </td>
                             <td className="py-3 px-6 text-right">
-                                <input
-                                    type="password"
-                                    id="passwordConfirmation"
-                                    placeholder="Confirmar Contraseña"
-                                    value={passwordConfirmation}
-                                    onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
+                            <input
+                            type="name"
+                            id="name"
+                            placeholder=""
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                            />
                             </td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            )}
+                        {isSigningUp && (
+
+                            <tr>
                             <td className="py-3 px-6 text-left">
-                                <label htmlFor="NIT" className="text-gray-600">
-                                    NIT
-                                </label>
+                            <label htmlFor="lastName" className="text-gray-600">
+                            Apellidos
+                            </label>
                             </td>
                             <td className="py-3 px-6 text-right">
-                                <input
-                                    type="NIT"
-                                    id="NIT"
-                                    placeholder="Sin guiones ni espacios"
-                                    value={NIT}
-                                    onChange={(e) => setNIT(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
+                            <input
+                            type="lastName"
+                            id="lastName"
+                            placeholder=""
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                            />
                             </td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            )}
+                        {isSigningUp && (
+
+                            <tr>
                             <td className="py-3 px-6 text-left">
-                                <label htmlFor="DPI" className="text-gray-600">
-                                DPI
-                                </label>
+                            <label htmlFor="bornDate" className="text-gray-600">
+                            Fecha de Nacimiento
+                            </label>
                             </td>
                             <td className="py-3 px-6 text-right">
-                                <input
-                                    type="DPI"
-                                    id="DPI"
-                                    placeholder="Sin guiones ni espacios"
-                                    value={DPI}
-                                    onChange={(e) => setDPI(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
+                            <input
+                            type="bornDate"
+                            id="bornDate"
+                            placeholder="DD/MM/AA"
+                            value={bornDate}
+                            onChange={(e) => setBornDate(e.target.value)}
+                            className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                            />
                             </td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            )}
+                        {isSigningUp && (
+
+                            <tr>
                             <td className="py-3 px-6 text-left">
-                                <label htmlFor="name" className="text-gray-600">
-                                Nombres
-                                </label>
+                            <label htmlFor="deliveryAddress" className="text-gray-600">
+                            Dirección de entrega
+                            </label>
                             </td>
                             <td className="py-3 px-6 text-right">
-                                <input
-                                    type="name"
-                                    id="name"
-                                    placeholder=""
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
+                            <input
+                            type="deliveryAddress"
+                            id="deliveryAddress"
+                            placeholder=""
+                            value={deliveryAddress}
+                            onChange={(e) => setDeliveryAddress(e.target.value)}
+                            className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                            />
                             </td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            )}
+                        {isSigningUp && (
+
+                            <tr>
                             <td className="py-3 px-6 text-left">
-                                <label htmlFor="lastName" className="text-gray-600">
-                                Apellidos
-                                </label>
+                            <label htmlFor="phoneNumber" className="text-gray-600">
+                            Número de teléfono
+                            </label>
                             </td>
                             <td className="py-3 px-6 text-right">
-                                <input
-                                    type="lastName"
-                                    id="lastName"
-                                    placeholder=""
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
+                            <input
+                            type="phoneNumber"
+                            id="phoneNumber"
+                            placeholder=""
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                            />
                             </td>
-                        </tr>
-                        <tr>
-                            <td className="py-3 px-6 text-left">
-                                <label htmlFor="bornDate" className="text-gray-600">
-                                Fecha de Nacimiento
-                                </label>
-                            </td>
-                            <td className="py-3 px-6 text-right">
-                                <input
-                                    type="bornDate"
-                                    id="bornDate"
-                                    placeholder="DD/MM/AA"
-                                    value={bornDate}
-                                    onChange={(e) => setBornDate(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="py-3 px-6 text-left">
-                                <label htmlFor="deliveryAddress" className="text-gray-600">
-                                Dirección de entrega
-                                </label>
-                            </td>
-                            <td className="py-3 px-6 text-right">
-                                <input
-                                    type="deliveryAddress"
-                                    id="deliveryAddress"
-                                    placeholder=""
-                                    value={deliveryAddress}
-                                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
-                            </td>
-                        </tr> 
-                        <tr>
-                            <td className="py-3 px-6 text-left">
-                                <label htmlFor="phoneNumber" className="text-gray-600">
-                                Número de teléfono
-                                </label>
-                            </td>
-                            <td className="py-3 px-6 text-right">
-                                <input
-                                    type="phoneNumber"
-                                    id="phoneNumber"
-                                    placeholder=""
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    className="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                                />
-                            </td>
-                        </tr>  
+                            </tr>
+                            )}
                         <tr>
                             <td colSpan="2" className="py-3 px-6 text-center">
                                 {isSigningUp ? (
