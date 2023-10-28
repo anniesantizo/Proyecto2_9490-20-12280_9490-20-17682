@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE_URL } from './Constants';
 
 function CartDialog({ cartItems, onClose }) {
     const [cartDetails, setCartDetails] = useState(null);
@@ -12,7 +13,7 @@ function CartDialog({ cartItems, onClose }) {
             return;
         }
 
-        const cartId = "6539debd93eb7b5bd4ff5253"; // Asegúrate de proporcionar el ID correcto
+        const cartId = localStorage.getItem('cartId')
         const headers = {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -22,7 +23,7 @@ function CartDialog({ cartItems, onClose }) {
             cartId: cartId,
         };
 
-        fetch('http://localhost:8080/api/carrito/byId', {
+        fetch(API_BASE_URL + 'carrito/byId', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(requestData)
@@ -43,7 +44,6 @@ function CartDialog({ cartItems, onClose }) {
     }, []);
 
     const fetchProductsForCart = (productIds) => {
-        // Realizar una solicitud GET a la API de productos para cada ID en el carrito
         const token = localStorage.getItem('token');
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -51,7 +51,7 @@ function CartDialog({ cartItems, onClose }) {
         };
 
         const productPromises = productIds.map((productId) => {
-            return fetch(`http://localhost:8080/api/productos/${productId}`, { // Agregar el productId a la URL
+            return fetch(API_BASE_URL + `productos/${productId}`, {
                 method: 'GET',
                 headers: headers,
             })
@@ -79,12 +79,12 @@ function CartDialog({ cartItems, onClose }) {
         };
 
         const requestData = {
-            cartId: cartDetails._id, // Utiliza el ID del carrito
+            cartId: cartDetails._id,
             productId: productId,
         };
 
-        fetch('http://localhost:8080/api/carrito', {
-            method: 'DELETE', // Usa el método HTTP DELETE para eliminar el producto
+        fetch(API_BASE_URL + 'carrito', {
+            method: 'DELETE',
             headers: headers,
             body: JSON.stringify(requestData),
         })
@@ -95,9 +95,7 @@ function CartDialog({ cartItems, onClose }) {
                 return response.json();
             })
             .then((data) => {
-                // Actualiza la lista de productos en el carrito después de eliminar
                 fetchProductsForCart(data.products);
-                // Actualiza el total del carrito
                 setCartDetails(data);
             })
             .catch((error) => {

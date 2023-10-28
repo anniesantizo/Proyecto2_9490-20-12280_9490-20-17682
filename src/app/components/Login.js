@@ -1,8 +1,7 @@
 'use client'
 import {useState, useEffect} from 'react';
-import {FaSignOutAlt} from 'react-icons/fa';
-import Catalog from "@/app/components/Catalog";
-import Dashboard from "@/app/components/dashboard";
+import Dashboard from "./dashboard";
+import {API_BASE_URL} from "@/app/components/Constants";
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -66,7 +65,7 @@ export default function Login() {
                 phoneNumber
             };
 
-            const response = await fetch(`http://localhost:8080/api/registro/${DPI}`, {
+            const response = await fetch(API_BASE_URL+`registro/${DPI}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +105,7 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/login', {
+            const response = await fetch(API_BASE_URL+'login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,12 +119,14 @@ export default function Login() {
             if (response.status === 200) {
                 const data = await response.json();
                 const token = data.token;
+                const DPI = data.DPI;
                 localStorage.setItem('token', token);
+                localStorage.setItem('DPI', DPI);
                 setIsLoggedIn(true);
             }
             if (response.status === 400) {
                 const responseData = await response.json();
-                const errorMessage = responseData.msg; // Nombre del campo que contiene el mensaje
+                const errorMessage = responseData.msg;
                 window.alert(`${errorMessage}`);
             }
         } catch (error) {
