@@ -144,11 +144,11 @@ function Catalog({ handleCartUpdate }) {
             <Link href="/catalog"></Link>
             <div className="title-container">
                 <div className="title-and-cart">
-                    <h1 className="text-2xl font-bold pb-8">Catálogo de Productos</h1>
+                    <h1 className="text-2xl font-bold pb-4 sm:pb-8">Catálogo de Productos</h1>
                 </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {products.map((product) => (
                     <div key={product._id} className="bg-white p-4 border rounded shadow">
                         <div style={{ position: 'relative' }}>
@@ -182,7 +182,7 @@ function Catalog({ handleCartUpdate }) {
 
             {dpiMatch && (
                 <button
-                    className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full w-16 h-16 flex items-center justify-center hover:bg-blue-600"
+                    className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center hover:bg-blue-600"
                     onClick={() => {
                         setIsAddProductDialogOpen(true);
                     }}
@@ -196,9 +196,9 @@ function Catalog({ handleCartUpdate }) {
                     onAddProduct={addToCart}
                     productId={selectedProduct ? selectedProduct._id : null}
                 />
-
             )}
         </div>
+
     );
 }
 
